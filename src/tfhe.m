@@ -7,14 +7,14 @@
 
 %----------------------------------------------------------------------------%
 
-:- type tfhe_key ---> tfhe_key(uint32).
-:- type tfhe_plaintext ---> tfhe_plaintext(uint32).
-:- type tfhe_ciphertext ---> tfhe_ciphertext(uint32).
+:- type key ---> key(uint32).
+:- type plaintext ---> plaintext(uint32).
+:- type ciphertext ---> ciphertext(uint32).
 
-:- func tfhe_encrypt(tfhe_plaintext, tfhe_key) = tfhe_ciphertext.
-:- func tfhe_decrypt(tfhe_ciphertext, tfhe_key) = tfhe_plaintext.
+:- func encrypt(plaintext, key) = ciphertext.
+:- func decrypt(ciphertext, key) = plaintext.
 
-:- func tfhe_nand(tfhe_ciphertext, tfhe_ciphertext) = tfhe_ciphertext.
+:- func nand(ciphertext, ciphertext) = ciphertext.
 
 %----------------------------------------------------------------------------%
 %----------------------------------------------------------------------------%
@@ -23,11 +23,11 @@
 
 %----------------------------------------------------------------------------%
 
-tfhe_encrypt(P, K) =
-  tfhe_ciphertext(0u32).
+encrypt(P, K) =
+  ciphertext(0u32).
 
-tfhe_decrypt(C, K) =
-  tfhe_plaintext(0u32).
+decrypt(C, K) =
+  plaintext(0u32).
 
-tfhe_nand(C1, C2) =
-  tfhe_ciphertext(0u32).
+nand(C1, C2) =
+  ciphertext(0u32).

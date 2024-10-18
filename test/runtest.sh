@@ -15,7 +15,7 @@ fi
 
 testcmd() {
   ./"$BASE" < "$INP" > "$OUT" && 
-    $DIFF "$EXP" "$OUT" && 
+    $DIFF "$OUT" "$EXP" && 
     rm -f "$OUT"
 }
 
