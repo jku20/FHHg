@@ -4,7 +4,9 @@ DIFF = diff -u
 
 files = $(wildcard **.m ../src/**.m)
 
-TESTS = test_tfhe_nand
+TESTS = test_tfhe_nand\
+				test_vector
+	
 
 .PHONY: test
 test: $(addsuffix .runtest,$(TESTS)) Mercury.options
