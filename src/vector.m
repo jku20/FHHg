@@ -33,8 +33,17 @@
 :- pred mk_random_vec(D::in, vector(T, D)::out, R::in, R::out) is det 
 <= (ring(T), dimension(D), random_elm(T), random(R)).
 
+:- func vector(T, D) * vector(T, D) = 
+  T is det <= (ring(T), dimension(D), random_elm(T)).
+
 :- func dot(vector(T, D), vector(T, D)) = 
   T is det <= (ring(T), dimension(D), random_elm(T)).
+
+:- func vector(T, D) + vector(T, D) = 
+  vector(T, D) is det <= (ring(T), dimension(D), random_elm(T)).
+
+:- func sum(vector(T, D), vector(T, D)) = 
+  vector(T, D) is det <= (ring(T), dimension(D), random_elm(T)).
 
 %----------------------------------------------------------------------------%
 %----------------------------------------------------------------------------%
@@ -75,12 +84,23 @@ mk_random_vec(Dim, V, !R) :-
   mk_random_list(dim(Dim), L, !R),
   V = vector(L, Dim).
 
-% This is guarrenteed to be a valid dot product.
+% These are guarrenteed to be valid binary operations.
 % The type system guarrentees the vectores are the same size.
 dot(vector([], _), _) = zero.
 dot(vector([ _ | _ ], _), vector([], _)) = zero.
 dot(vector([ H1 | T1 ], D1), vector([ H2 | T2 ], D2)) = 
   (H1 * H2) + dot(vector(T1, D1), vector(T2, D2)).
+
+V1 * V2 = dot(V1, V2).
+
+:- func sum_lists(list(T), list(T)) = list(T) <= ring(T).
+sum_lists([], _) = [].
+sum_lists([ _ | _ ], []) = [].
+sum_lists([ H1 | T1 ], [ H2 | T2 ]) = [ H1 + H2 | sum_lists(T1, T2) ].
+
+sum(vector(L1, D), vector(L2, _)) = vector(sum_lists(L1, L2), D).
+
+V1 + V2 = sum(V1, V2).
 
 % Impelmentations of random_elm for common types.
 :- instance random_elm(uint32) where [
