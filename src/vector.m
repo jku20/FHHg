@@ -34,6 +34,8 @@
 :- pred mk_random_vec(D::in, vector(T, D)::out, R::in, R::out) is det 
 <= (ring(T), dimension(D), random_elm(T), random(R)).
 
+% Common Operations.
+
 :- func vector(T, D) * vector(T, D) = 
   T is det <= (ring(T), dimension(D), random_elm(T)).
 
@@ -44,6 +46,9 @@
   vector(T, D) is det <= (ring(T), dimension(D), random_elm(T)).
 
 :- func sum(vector(T, D), vector(T, D)) = 
+  vector(T, D) is det <= (ring(T), dimension(D), random_elm(T)).
+
+:- func scale(T, vector(T, D)) = 
   vector(T, D) is det <= (ring(T), dimension(D), random_elm(T)).
 
 %----------------------------------------------------------------------------%
@@ -105,6 +110,10 @@ sum_lists([ H1 | T1 ], [ H2 | T2 ]) = [ H1 + H2 | sum_lists(T1, T2) ].
 sum(vector(L1, D), vector(L2, _)) = vector(sum_lists(L1, L2), D).
 
 V1 + V2 = sum(V1, V2).
+
+scale(_, vector([], D)) = vector([], D).
+scale(T, vector([ H | L ], D)) = vector([ T * H | Tail ], D) :-
+  vector(Tail, _) = scale(T, vector(L, D)).
 
 % Impelmentations of random_elm for common types.
 :- instance random_elm(uint32) where [

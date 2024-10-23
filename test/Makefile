@@ -6,6 +6,7 @@ files = $(wildcard **.m ../src/**.m)
 
 TESTS = test_tfhe_nand \
 				test_tfhe_add \
+				test_tfhe_scale \
 				test_vector
 	
 

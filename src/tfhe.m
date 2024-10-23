@@ -21,6 +21,7 @@
 
 % Common Operations.
 :- func ciphertext + ciphertext = ciphertext.
+:- func int32 * ciphertext = ciphertext.
 :- func nand(ciphertext, ciphertext) = ciphertext.
 
 %----------------------------------------------------------------------------%
@@ -51,7 +52,7 @@
 % Encryption/Decryption.
 
 deviation = 1e-24.
-encryption_offset = 29.
+encryption_offset = 24.
 
 generate_noise(O, !R) :-
   normal_floats(0.0, deviation, F, _, !R),
@@ -74,6 +75,7 @@ decrypt(ciphertext(A, B), key(K), P) :-
 % Common Operations.
 
 ciphertext(A1, B1) + ciphertext(A2, B2) = ciphertext(A1 + A2, B1 + B2).
+C * ciphertext(A, B) = ciphertext(scale(C, A), C * B).
 
 nand(C1, C2) = ciphertext(V, 0i32) :- 
   mk_zero_vec(size, V).
