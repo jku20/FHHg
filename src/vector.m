@@ -24,6 +24,7 @@
 ].
 
 :- instance random_elm(uint32).
+:- instance random_elm(int32).
 
 :- type vector(T, D). % <= (ring(T), dimension(D), random_elm(T))
 
@@ -52,7 +53,10 @@
 
 :- import_module exception.
 :- import_module list.
+:- import_module int.
+:- import_module int32.
 :- import_module uint64.
+:- import_module uint32.
 
 %----------------------------------------------------------------------------%
 
@@ -105,4 +109,18 @@ V1 + V2 = sum(V1, V2).
 % Impelmentations of random_elm for common types.
 :- instance random_elm(uint32) where [
   rand(T, !R) :- generate_uint32(T, !R)
+].
+
+:- pred random_int32(int32::out, R::in, R::out) is det <= random(R).
+random_int32(T, !R) :-
+  generate_uint32(U, !R),
+  I = cast_to_int(U),
+  (if I > int32.to_int(int32.max_int32) then
+    T = int32.det_from_int(
+      int32.to_int(int32.min_int32) + I - int32.to_int(int32.max_int32))
+  else
+    T = int32.det_from_int(I)).
+
+:- instance random_elm(int32) where [
+  rand(T, !R) :- random_int32(T, !R)
 ].
