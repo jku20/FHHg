@@ -4,7 +4,8 @@ DIFF = diff -u
 
 files = $(wildcard **.m ../src/**.m)
 
-TESTS = test_tfhe_nand\
+TESTS = test_tfhe_nand \
+				test_tfhe_add \
 				test_vector
 	
 
@@ -25,7 +26,7 @@ Mercury.modules: $(files)
 .PHONY: %.runtest
 # Subcommand for the runtest script, "test" runs tests.
 %.runtest: %
-	@cp $(<).exp build/
+	@cp $(<).exp build/ || (touch $(<).exp && cp $(<).exp build/)
 	./runtest.sh test build/$(<)
 
 .PHONY: %.gen

@@ -32,8 +32,8 @@ random_seed = 0xdeadbeefu64.
 main(!IO) :-
   R0 = sfc16.seed(random_seed),
   tfhe.mk_key(K, R0, R1),
-  P1 = tfhe.plaintext(0i32),
-  P2 = tfhe.plaintext(0i32),
+  P1 = tfhe.plaintext(0i8),
+  P2 = tfhe.plaintext(0i8),
   tfhe.encrypt(P1, K, C1, R1, R2),
   tfhe.encrypt(P2, K, C2, R2, _),
   C3 = tfhe.nand(C1, C2),

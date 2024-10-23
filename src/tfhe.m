@@ -5,20 +5,22 @@
 :- module tfhe.
 :- interface.
 
-:- import_module int32.
 :- import_module random.
 
 %----------------------------------------------------------------------------%
 
 :- type key.
-:- type plaintext ---> plaintext(int32).
+:- type plaintext ---> plaintext(int8).
 :- type ciphertext.
 
+% Encryption/Decryption.
 :- pred mk_key(key::out, R::in, R::out) is det <= random(R).
 :- pred encrypt(plaintext::in, key::in, ciphertext::out, R::in, R::out) is det
 <= random(R).
 :- pred decrypt(ciphertext::in, key::in, plaintext::out) is det.
 
+% Common Operations.
+:- func ciphertext + ciphertext = ciphertext.
 :- func nand(ciphertext, ciphertext) = ciphertext.
 
 %----------------------------------------------------------------------------%
@@ -28,6 +30,7 @@
 
 :- import_module float.
 :- import_module vector.
+:- import_module int32.
 
 %----------------------------------------------------------------------------%
 
@@ -41,9 +44,14 @@
 :- func deviation = float.
 :- pred generate_noise(int32::out, R::in, R::out) is det <= random(R).
 
+:- func encryption_offset = int.
+
 %----------------------------------------------------------------------------%
 
-deviation = 1e-20.
+% Encryption/Decryption.
+
+deviation = 1e-24.
+encryption_offset = 29.
 
 generate_noise(O, !R) :-
   normal_floats(0.0, deviation, F, _, !R),
@@ -54,13 +62,18 @@ mk_key(K, !R) :-
   mk_random_vec(size, K0, !R),
   K = key(K0).
 
-encrypt(plaintext(P), key(K), C, !R) :- 
+encrypt(plaintext(P0), key(K), C, !R) :-
+  P = cast_from_int8(P0) << encryption_offset,
   mk_random_vec(size, A, !R),
   generate_noise(E, !R),
   C = ciphertext(A, K * A + P + E).
 
-decrypt(C, K, P) :-
-  P = plaintext(0i32).
+decrypt(ciphertext(A, B), key(K), P) :-
+  P = plaintext(cast_to_int8((B - K * A) >> encryption_offset)).
+
+% Common Operations.
+
+ciphertext(A1, B1) + ciphertext(A2, B2) = ciphertext(A1 + A2, B1 + B2).
 
 nand(C1, C2) = ciphertext(V, 0i32) :- 
   mk_zero_vec(size, V).
