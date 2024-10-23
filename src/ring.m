@@ -35,7 +35,7 @@
 
 :- instance ring(uint32) where [
   func((+)/2) is uint32.(+),
-  func((*)/2) is uint32.(+),
+  func((*)/2) is uint32.(*),
   zero = 0u32,
   one = 1u32
 ].

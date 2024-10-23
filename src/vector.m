@@ -77,10 +77,10 @@ mk_random_vec(Dim, V, !R) :-
 
 % This is guarrenteed to be a valid dot product.
 % The type system guarrentees the vectores are the same size.
-dot(vector([], _), _) = one.
-dot(vector([ _ | _ ], _), vector([], _)) = one.
+dot(vector([], _), _) = zero.
+dot(vector([ _ | _ ], _), vector([], _)) = zero.
 dot(vector([ H1 | T1 ], D1), vector([ H2 | T2 ], D2)) = 
-  H1 * H2 + dot(vector(T1, D1), vector(T2, D2)).
+  (H1 * H2) + dot(vector(T1, D1), vector(T2, D2)).
 
 % Impelmentations of random_elm for common types.
 :- instance random_elm(uint32) where [
